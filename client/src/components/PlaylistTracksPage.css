@@ -1,0 +1,43 @@
+/* Center the entire playlist tracks container */
+.PlaylistTracksContainer {
+    margin-left: 15px;
+    max-width: 600px;
+}
+
+/* Title styling */
+.PlaylistTracksContainer h2 {
+    font-size: 2em;
+    color: #000000;
+    margin-bottom: 0.5em;
+}
+
+/* Style for each track item */
+.track-item {
+    display: flex;
+    align-items: center;
+    margin: 15px 0; /* Space between track items */
+}
+
+/* Style for track images */
+.track-image {
+    width: 50px;
+    height: 50px;
+    margin-right: 15px;
+    border-radius: 5px;
+}
+
+/* Style for track name and artist text */
+.track-text {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #000000; /* Black color for track names */
+    margin: 0;
+}
+
+/* Style for playlist name */
+.playlist-name {
+    text-decoration: underline; /* Adds an underline */
+    font-weight: bold;          /* Makes it bold */
+    color: #3a3e3b;             /* Optional: Spotify green */
+    font-style: italic;         /* Optional: Italic style */
+}

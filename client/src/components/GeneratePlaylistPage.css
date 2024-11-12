@@ -1,0 +1,148 @@
+/* Center the container with full height */
+.generate-playlist-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #f7f7f7; /* Unified background color */
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Title styling */
+h2 {
+    font-size: 1.8em;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Style for the form container */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 400px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Label styling */
+label {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* Input field styling */
+input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 1em;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+input[type="number"]:focus {
+    border-color: #1db954; /* Spotify green */
+}
+
+/* Button container to organize buttons side by side */
+.button-container {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    margin-top: 20px;
+    padding-bottom: 20px; /* Adds space between buttons and bottom of the screen */
+    justify-content: center;
+}
+
+/* Style for the buttons */
+button {
+    flex: 1;
+    background-color: #1db954;
+    color: #fff;
+    padding: 10px;
+    font-size: 1.1em;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center;
+}
+
+button[type="button"] {
+    background-color: #555;
+}
+
+button:hover {
+    background-color: #17a74a;
+}
+
+button[type="button"]:hover {
+    background-color: #333;
+}
+
+/* Style for the error message */
+.error-message {
+    color: red;
+    font-size: 0.9em;
+    margin: 10px 0;
+}
+
+/* Loading indicator styling */
+.loading-indicator {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.spinner {
+    border: 8px solid rgba(0, 0, 0, 0.1);
+    border-top: 8px solid #3498db;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 10px auto;
+}
+
+/* Keyframes for spinner animation */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Track item styling */
+.track-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+}
+
+/* Track image styling */
+.track-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 4px;
+    margin-right: 15px;
+}
+
+/* Track details text styling */
+.track-details .track-text {
+    font-size: 1em;
+    color: #333;
+}
