@@ -1,6 +1,3 @@
-/flask_session
-/python
-.env
 /.vscode
 /node_modules
 /client/node_modules
