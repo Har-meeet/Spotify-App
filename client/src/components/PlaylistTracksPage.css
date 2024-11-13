@@ -15,29 +15,72 @@
 .track-item {
     display: flex;
     align-items: center;
-    margin: 15px 0; /* Space between track items */
+    margin: 15px 0;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+/* Hover effect for track item */
+.track-item:hover {
+    background-color: rgba(0, 0, 0, 0.1); /* Light background on hover */
 }
 
 /* Style for track images */
-.track-image {
+.track-image-container {
     width: 50px;
     height: 50px;
+    position: relative;
     margin-right: 15px;
+}
+
+/* Keep the track image intact */
+.track-image {
+    width: 100%;
+    height: 100%;
     border-radius: 5px;
 }
 
+/* Overlay play/pause button styling */
+.play-button-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.6); /* Semi-transparent overlay */
+    color: white;
+    font-size: 1.5em;
+    opacity: 0; /* Hidden by default */
+    transition: opacity 0.3s ease;
+}
+
+/* Show the overlay button on hover */
+.track-item:hover .play-button-overlay {
+    opacity: 1;
+}
+
 /* Style for track name and artist text */
+.track-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
 .track-text {
     font-size: 1.2em;
     font-weight: bold;
-    color: #000000; /* Black color for track names */
+    color: #000000;
     margin: 0;
 }
 
 /* Style for playlist name */
 .playlist-name {
-    text-decoration: underline; /* Adds an underline */
-    font-weight: bold;          /* Makes it bold */
-    color: #3a3e3b;             /* Optional: Spotify green */
-    font-style: italic;         /* Optional: Italic style */
+    text-decoration: underline;
+    font-weight: bold;
+    color: #3a3e3b;
+    font-style: italic;
 }

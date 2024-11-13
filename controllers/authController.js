@@ -1,11 +1,18 @@
 // controllers/authController.js
 const axios = require('axios');
+const { getValidAccessToken } = require('../util/tokenHelper');
+
+exports.accessToken = async (req, res) => {
+    const accessToken = await getValidAccessToken(req.session.user_id);
+    req.session.access_token = accessToken;
+    res.json({ access_token: accessToken, expires_in: req.session.expires_in });
+}
 
 exports.login = (req, res) => {
-    const scopes = 'playlist-read-private playlist-modify-private user-library-read';
-    const forceLogin = req.query.force_login === 'true';
-    const spotifyAuthUrl = `https://accounts.spotify.com/authorize?response_type=code&client_id=${process.env.SPOTIFY_CLIENT_ID}&scope=${encodeURIComponent(scopes)}&redirect_uri=${encodeURIComponent(process.env.REDIRECT_URI)}`;
-    const authUrl = `${spotifyAuthUrl}${forceLogin ? '&show_dialog=true' : ''}`;
+const scopes = 'playlist-read-private playlist-modify-private user-library-read user-modify-playback-state user-read-playback-state';
+const forceLogin = req.query.force_login === 'true';
+const spotifyAuthUrl = `https://accounts.spotify.com/authorize?response_type=code&client_id=${process.env.SPOTIFY_CLIENT_ID}&scope=${encodeURIComponent(scopes)}&redirect_uri=${encodeURIComponent(process.env.REDIRECT_URI)}`;
+const authUrl = `${spotifyAuthUrl}${forceLogin ? '&show_dialog=true' : ''}`;
     
     res.redirect(authUrl);
 };

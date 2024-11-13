@@ -21,3 +21,8 @@ export const savePlaylist = async (playlistId, name, trackIds) => {
     const response = await axios.post(`${API_BASE}/save_playlist`, { playlistId, name, trackIds }, { withCredentials: true });
     return response.data;
 };
+
+export const fetchAccessToken = async () => {
+    const response = await axios.get(`${API_BASE}/auth/access-token`, { withCredentials: true });
+    return response.data;
+};

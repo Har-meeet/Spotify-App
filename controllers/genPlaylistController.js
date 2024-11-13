@@ -28,7 +28,7 @@ async function getUserSavedTracks(accessToken) {
             headers: { 'Authorization': `Bearer ${accessToken}` }
         });
         response.data.items.forEach(item => {
-            if (item.track && item.track.id) {
+            if (item.track && item.track.name && item.track.artists[0].name) {
                 const trackData = `${item.track.name.toLowerCase()} - ${item.track.artists[0].name.toLowerCase()}`;
                 tracks.add(trackData);
             }
@@ -59,7 +59,7 @@ async function getUserPlaylistsAndTracks(accessToken, targetPlaylistId) {
                 });
 
                 trackResponse.data.items.forEach(item => {
-                    if (item.track && item.track.id) {
+                    if (item.track && item.track.name && item.track.artists[0].name) {
                         const trackData = `${item.track.name.toLowerCase()} - ${item.track.artists[0].name.toLowerCase()}`;
                         allTracks.add(trackData);
 
@@ -156,10 +156,12 @@ exports.generatePlaylist = async (req, res) => {
             const newRecs = await fetchRecommendations(accessToken, seedTracks, avgFeatures, i);
 
             for (const track of newRecs) {
-                const trackData = `${track.name.toLowerCase()} - ${track.artists[0].name.toLowerCase()}`;
-                if (!allTracks.has(trackData) && !recommendations.find(rec => rec.id === track.id)) {
-                    recommendations.push(track);
-                    if (recommendations.length >= length) break;
+                if (track && track.name && track.artists[0].name) {
+                    const trackData = `${track.name.toLowerCase()} - ${track.artists[0].name.toLowerCase()}`;
+                    if (!allTracks.has(trackData) && !recommendations.find(rec => rec.id === track.id)) {
+                        recommendations.push(track);
+                        if (recommendations.length >= length) break;
+                    }
                 }
             }
 

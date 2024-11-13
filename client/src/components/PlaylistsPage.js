@@ -1,21 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import {fetchPlaylists} from '../api';
 import './PlaylistsPage.css';
+
+import Playlist from '../models/Playlist';
 
 function PlaylistsPage() {
     const [playlists, setPlaylists] = useState([]);
 
     useEffect(() => {
-        const fetchPlaylists = async () => {
+        const getPlaylists = async () => {
             try {
-                const response = await axios.get('http://localhost:8888/playlists', { withCredentials: true });
-                setPlaylists(response.data.items);
+                const response = await fetchPlaylists();
+
+                const playlistsData = response.items.map(
+                    (playlist) => new Playlist(
+                        playlist.id,
+                        playlist.name,
+                        playlist.images && playlist.images.length > 0 ? playlist.images[0].url : null
+                    )
+                );
+                setPlaylists(playlistsData);
             } catch (error) {
                 console.error('Error fetching playlists:', error);
             }
         };
-        fetchPlaylists();
+        getPlaylists();
     }, []);
 
     return (
@@ -24,8 +34,10 @@ function PlaylistsPage() {
             <ul>
                 {playlists.map((playlist) => (
                     <li key={playlist.id} className="playlist-item">
-                        {playlist.images[0] && (
-                            <img src={playlist.images[0].url} alt="Playlist cover" className="playlist-image" />
+                        {playlist.imageUrl ? (
+                            <img src={playlist.imageUrl} alt="Playlist cover" className="playlist-image" />
+                        ) : (
+                            <div className="playlist-image-placeholder">No Image</div>
                         )}
                         <Link to={`/playlist/${playlist.id}`} className="playlist-link">
                             {playlist.name}

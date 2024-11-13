@@ -5,7 +5,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: #f7f7f7; /* Unified background color */
+    background-color: #f7f7f7;
     padding: 20px;
     box-sizing: border-box;
 }
@@ -51,7 +51,7 @@ input[type="number"] {
 }
 
 input[type="number"]:focus {
-    border-color: #1db954; /* Spotify green */
+    border-color: #1db954;
 }
 
 /* Button container to organize buttons side by side */
@@ -60,11 +60,11 @@ input[type="number"]:focus {
     gap: 10px;
     width: 100%;
     margin-top: 20px;
-    padding-bottom: 20px; /* Adds space between buttons and bottom of the screen */
+    padding-bottom: 20px;
     justify-content: center;
 }
 
-/* Style for the buttons */
+/* Style for buttons */
 button {
     flex: 1;
     background-color: #1db954;
@@ -114,7 +114,6 @@ button[type="button"]:hover {
     margin: 10px auto;
 }
 
-/* Keyframes for spinner animation */
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
@@ -131,14 +130,56 @@ button[type="button"]:hover {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     width: 100%;
     max-width: 500px;
+    position: relative; /* Ensures overlay is positioned correctly */
+}
+
+/* Styling for play button overlay */
+.track-image-container {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    margin-right: 15px;
+}
+
+.play-button-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5em;
+    background-color: rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: 4px;
+}
+
+.track-item:hover .play-button-overlay {
+    opacity: 1;
 }
 
 /* Track image styling */
 .track-image {
+    width: 100%;
+    height: 100%;
+    border-radius: 4px;
+}
+
+/* Placeholder for tracks without an image */
+.track-image-placeholder {
     width: 50px;
     height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8em;
+    color: #666;
+    background-color: #e0e0e0;
     border-radius: 4px;
-    margin-right: 15px;
 }
 
 /* Track details text styling */
