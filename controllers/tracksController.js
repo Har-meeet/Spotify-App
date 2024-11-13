@@ -3,8 +3,13 @@ const axios = require('axios');
 const { getValidAccessToken } = require('../util/tokenHelper');
 
 exports.getTrack = async (req, res) => {
-    const accessToken = await getValidAccessToken(req.session.user_id);
-    req.session.access_token = accessToken;
+    const accessToken = await getValidAccessToken(req.sessionID);
+    req.session.reload((err) => {
+        if (err) {
+            console.error('Error reloading session:', err);
+            return res.status(500).json({ error: 'Failed to reload session data' });
+        }
+    });
     const trackId = req.params.track_id;
 
     if (!accessToken) {

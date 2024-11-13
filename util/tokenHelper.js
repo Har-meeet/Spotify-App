@@ -3,28 +3,33 @@ const axios = require('axios');
 const pool = require('../db/mysqlConnection');
 
 // Helper function to check and refresh access token if needed
-async function getValidAccessToken(userId) {
+async function getValidAccessToken(sessionId) {
     try {
+        // Fetch the session data JSON from the database using session_id
         const [rows] = await pool.query(
-            'SELECT access_token, refresh_token, token_expiry FROM users WHERE user_id = ?',
-            [userId]
+            'SELECT data FROM sessions WHERE session_id = ?',
+            [sessionId]
         );
 
         if (rows.length === 0) {
-            throw new Error('User not found in the database');
+            throw new Error('Session not found in the database');
         }
 
-        let { access_token: accessToken, refresh_token: refreshToken, token_expiry: tokenExpiry } = rows[0];
+        // Parse the JSON data to extract tokens and expiry information
+        const sessionData = JSON.parse(rows[0].data);
+        const { access_token: accessToken, refresh_token: refreshToken, expires_in: tokenExpiry, user_id: userId } = sessionData;
+
         const currentTime = new Date();
         const expiryTime = new Date(tokenExpiry);
         const timeRemaining = expiryTime - currentTime;
 
+        // Check if the token is still valid
         if (timeRemaining > process.env.REQUEST_TOKEN_BUFFER) {
             return accessToken;
         }
 
-        // Refresh the token and update session
-        const newAccessToken = await refreshAccessToken(refreshToken, userId);
+        // If the token is expired or close to expiry, refresh it
+        const newAccessToken = await refreshAccessToken(refreshToken, sessionId);
 
         return newAccessToken;
 
@@ -34,8 +39,8 @@ async function getValidAccessToken(userId) {
     }
 }
 
-// Function to refresh the access token
-async function refreshAccessToken(refreshToken, userId) {
+
+async function refreshAccessToken(refreshToken, sessionId) {
     const authOptions = {
         method: 'post',
         url: 'https://accounts.spotify.com/api/token',
@@ -55,12 +60,26 @@ async function refreshAccessToken(refreshToken, userId) {
         const expiresIn = response.data.expires_in;
 
         const newExpiryTime = new Date(Date.now() + expiresIn * 1000);
-        console.log(`New expiry time: ${newExpiryTime}`);
 
-        // Update database
+        // Fetch and update the session data in JSON format
+        const [rows] = await pool.query(
+            'SELECT data FROM sessions WHERE session_id = ?',
+            [sessionId]
+        );
+
+        if (rows.length === 0) {
+            throw new Error('Session not found in the database');
+        }
+
+        // Parse and update the session data
+        const sessionData = JSON.parse(rows[0].data);
+        sessionData.access_token = newAccessToken;
+        sessionData.expires_in = newExpiryTime;
+
+        // Save the updated session data back to the database
         await pool.query(
-            `UPDATE users SET access_token = ?, token_expiry = ? WHERE user_id = ?`,
-            [newAccessToken, newExpiryTime, userId]
+            `UPDATE sessions SET data = ? WHERE session_id = ?`,
+            [JSON.stringify(sessionData), sessionId]
         );
 
         return newAccessToken;
@@ -69,5 +88,6 @@ async function refreshAccessToken(refreshToken, userId) {
         throw error;
     }
 }
+
 
 module.exports = { getValidAccessToken };

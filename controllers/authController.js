@@ -3,9 +3,15 @@ const axios = require('axios');
 const { getValidAccessToken } = require('../util/tokenHelper');
 
 exports.accessToken = async (req, res) => {
-    const accessToken = await getValidAccessToken(req.session.user_id);
-    req.session.access_token = accessToken;
-    res.json({ access_token: accessToken, expires_in: req.session.expires_in });
+    accessToken = await getValidAccessToken(req.sessionID);
+    req.session.reload((err) => {
+        if (err) {
+            console.error('Error reloading session:', err);
+            return res.status(500).json({ error: 'Failed to reload session data' });
+        } else {
+            res.json({ access_token: accessToken, expires_in: req.session.expires_in });
+        }
+    });
 }
 
 exports.login = (req, res) => {
@@ -25,8 +31,6 @@ exports.checkSession = (req, res) => {
         res.json({ isAuthenticated: false });
     }
 };
-
-const pool = require('../db/mysqlConnection'); // Ensure this is imported
 
 exports.callback = async (req, res) => {
     const code = req.query.code || null;
@@ -64,17 +68,6 @@ exports.callback = async (req, res) => {
         req.session.refresh_token = refresh_token;
         req.session.expires_in = tokenExpiry;
         req.session.user_id = user_id;
-
-        // Insert or update user in the database
-        await pool.query(
-            `INSERT INTO users (user_id, access_token, refresh_token, token_expiry) 
-             VALUES (?, ?, ?, ?) 
-             ON DUPLICATE KEY UPDATE 
-                 access_token = VALUES(access_token), 
-                 refresh_token = VALUES(refresh_token), 
-                 token_expiry = VALUES(token_expiry)`,
-            [user_id, access_token, refresh_token, tokenExpiry]
-        );
 
         res.redirect(`http://localhost:3000?user_id=${user_id}`);
     } catch (error) {

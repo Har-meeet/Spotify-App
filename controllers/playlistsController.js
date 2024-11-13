@@ -8,8 +8,13 @@ exports.getUserPlaylists = async (req, res) => {
     }
 
     try {
-        const accessToken = await getValidAccessToken(req.session.user_id);
-        req.session.access_token = accessToken;
+        const accessToken = await getValidAccessToken(req.sessionID);
+        req.session.reload((err) => {
+            if (err) {
+                console.error('Error reloading session:', err);
+                return res.status(500).json({ error: 'Failed to reload session data' });
+            }
+        });
         const response = await axios.get('https://api.spotify.com/v1/me/playlists', {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
@@ -24,8 +29,13 @@ exports.getUserPlaylists = async (req, res) => {
 };
 
 exports.getPlaylistTracks = async (req, res) => {
-    const accessToken = await getValidAccessToken(req.session.user_id);
-    req.session.access_token = accessToken;
+    const accessToken = await getValidAccessToken(req.sessionID);
+    req.session.reload((err) => {
+        if (err) {
+            console.error('Error reloading session:', err);
+            return res.status(500).json({ error: 'Failed to reload session data' });
+        }
+    });
     const playlistId = req.params.playlist_id;
 
     if (!accessToken) {

@@ -133,7 +133,7 @@ async function fetchRecommendations(accessToken, seedTracks, avgFeatures, i) {
 exports.generatePlaylist = async (req, res) => {
     const playlist_id = req.params.playlist_id;
     const length = req.body.length;
-    const accessToken = await getValidAccessToken(req.session.user_id);
+    const accessToken = await getValidAccessToken(req.sessionID);
 
     if (!accessToken) return res.status(401).send('User not authenticated');
 

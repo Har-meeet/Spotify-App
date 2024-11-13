@@ -3,6 +3,7 @@ require('dotenv').config();
 const cors = require('cors');
 const express = require('express');
 const session = require('express-session');
+const cron = require('node-cron');
 const MySQLStore = require('express-mysql-session')(session);
 const authRoutes = require('./routes/authRoutes');
 const playlistRoutes = require('./routes/playlistsRoutes');
@@ -11,12 +12,11 @@ const generatePlaylistRoutes = require('./routes/genPlaylistRoutes');
 const savePlaylistRoutes = require('./routes/savePlaylistRoutes');
 const pool = require('./db/mysqlConnection'); // Importing shared pool
 
-const app = express();
-
-const sessionStore = new MySQLStore({}, pool);
 
 // Middleware
+const app = express();
 app.use(express.json());
+const sessionStore = new MySQLStore({}, pool);
 app.use(session({
     key: 'spotify_session',
     secret: process.env.SESSION_SECRET,
@@ -45,6 +45,18 @@ app.use('/save_playlist', savePlaylistRoutes);
 // Home route
 app.get('/', (req, res) => {
     res.send('Spotify API Backend');
+});
+
+//Scheduled DB clean-up
+cron.schedule('0 * * * *', async () => {
+    console.log('Running session cleanup task...');
+
+    try {
+        const [results] = await pool.query('DELETE FROM sessions WHERE expires < NOW()');
+        console.log(`Expired sessions cleaned up. ${results.affectedRows} sessions removed.`);
+    } catch (error) {
+        console.error('Error during session cleanup:', error);
+    }
 });
 
 // Start server
