@@ -47,17 +47,17 @@ app.get('/', (req, res) => {
     res.send('Spotify API Backend');
 });
 
-//Scheduled DB clean-up
-cron.schedule('0 * * * *', async () => {
-    console.log('Running session cleanup task...');
+// //Scheduled DB clean-up
+// cron.schedule('0 * * * *', async () => {
+//     console.log('Running session cleanup task...');
 
-    try {
-        const [results] = await pool.query('DELETE FROM sessions WHERE expires < NOW()');
-        console.log(`Expired sessions cleaned up. ${results.affectedRows} sessions removed.`);
-    } catch (error) {
-        console.error('Error during session cleanup:', error);
-    }
-});
+//     try {
+//         const [results] = await pool.query('DELETE FROM sessions WHERE expires < NOW()');
+//         console.log(`Expired sessions cleaned up. ${results.affectedRows} sessions removed.`);
+//     } catch (error) {
+//         console.error('Error during session cleanup:', error);
+//     }
+// });
 
 // Start server
 const PORT = process.env.PORT || 8888;

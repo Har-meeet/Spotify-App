@@ -3,8 +3,7 @@ const axios = require('axios');
 const { getValidAccessToken } = require('../util/tokenHelper');
 
 exports.savePlaylist = async (req, res) => {
-    const userId = req.session.user_id;
-    const accessToken = await getValidAccessToken(userId);
+    const accessToken = await getValidAccessToken(req.sessionID);
 
     const { playlistId, name, trackIds } = req.body;
 
